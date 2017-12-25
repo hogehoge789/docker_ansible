@@ -9,8 +9,8 @@ RUN set -x && \
     mkdir /usr/ansible && \
     pip install pywinrm
 
-WORKDIR /usr/ansible
-ADD hosts /usr/ansible/
+# WORKDIR /usr/ansible
+# ADD hosts /usr/ansible/
 
 RUN set -x && \
     sed -i -e 's%#inventory      = /etc/ansible/hosts%inventory       = /usr/ansible/hosts%' /etc/ansible/ansible.cfg && \
