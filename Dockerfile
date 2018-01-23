@@ -1,17 +1,18 @@
 FROM centos:latest
 MAINTAINER ueno.k
 
-# Ansibleパッケージ類インストール
+# Ansible Install
 RUN set -x && \
     yum install -y epel-release && \
     yum install -y ansible && \
     curl -kL https://bootstrap.pypa.io/get-pip.py | python && \
-    mkdir /usr/ansible && \
+    mkdir /usr/ansible
 
-    # WORKDIR /usr/ansible
-    # ADD hosts /usr/ansible/
+# WORKDIR /usr/ansible
+# ADD hosts /usr/ansible/
 
-    RUN set -x && \
+# Ansible Config Setting
+RUN set -x && \
     sed -i -e 's%#inventory      = /etc/ansible/hosts%inventory       = /usr/ansible/hosts%' /etc/ansible/ansible.cfg && \
     sed -i -e 's/#deprecation_warnings = True/deprecation_warnings = False/g' /etc/ansible/ansible.cfg && \
     sed -i -e 's/^#retry_files_enabled/retry_files_enabled/g' /etc/ansible/ansible.cfg && \
