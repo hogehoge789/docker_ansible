@@ -4,19 +4,15 @@ MAINTAINER ueno.k
 # Ansible Install
 RUN set -x && \
     yum install -y epel-release && \
+    yum update -y && \
     yum install -y ansible && \
     curl -kL https://bootstrap.pypa.io/get-pip.py | python && \
-    mkdir /usr/ansible
+    mkdir /opt/ansible
 
-# WORKDIR /usr/ansible
-# ADD hosts /usr/ansible/
+WORKDIR /opt/ansible
+COPY requirements.txt /opt/ansible/
 
-# Ansible Config Setting
-RUN set -x && \
-    sed -i -e 's%#inventory      = /etc/ansible/hosts%inventory       = /usr/ansible/hosts%' /etc/ansible/ansible.cfg && \
-    sed -i -e 's/#deprecation_warnings = True/deprecation_warnings = False/g' /etc/ansible/ansible.cfg && \
-    sed -i -e 's/^#retry_files_enabled/retry_files_enabled/g' /etc/ansible/ansible.cfg && \
-    sed -i -e 's/ControlPersist=60s/ControlPersist=300s/g' /etc/ansible/ansible.cfg && \
-    sed -i -e 's/^#ssh_args/ssh_args/g' /etc/ansible/ansible.cfg
+# pip install
+RUN pip install -r requirements.txt
 
 ENTRYPOINT [ "ansible-playbook" ]
